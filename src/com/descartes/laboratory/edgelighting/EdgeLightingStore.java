@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.penguin.laboratory.edgelighting;
+package com.descartes.laboratory.edgelighting;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Locale;
 
 /** Everything the settings screen saves and the provider hands to SystemUI. */
-final class EdgeLightingStore {
+public final class EdgeLightingStore {
 
-    static final String AUTHORITY = "com.penguin.laboratory.provider";
+    static final String AUTHORITY = "com.descartes.laboratory.provider";
     static final Uri STATE_URI = Uri.parse("content://" + AUTHORITY + "/state");
     /** Asks SystemUI to play the effect now, so it can be seen without waiting for a notification. */
-    static final String ACTION_PREVIEW = "com.penguin.laboratory.action.EDGE_LIGHTING_PREVIEW";
+    static final String ACTION_PREVIEW = "com.descartes.laboratory.action.EDGE_LIGHTING_PREVIEW";
 
     // Motions SystemUI knows how to play
     static final String EFFECT_RAIN = "rain";
@@ -56,7 +56,7 @@ final class EdgeLightingStore {
                 .getSharedPreferences(PREFS, Context.MODE_PRIVATE);
     }
 
-    static boolean isEnabled(Context context) {
+    public static boolean isEnabled(Context context) {
         return prefs(context).getBoolean(KEY_ENABLED, false);
     }
 
