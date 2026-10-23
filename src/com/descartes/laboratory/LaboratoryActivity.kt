@@ -5,7 +5,7 @@
 
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 
-package com.penguin.laboratory
+package com.descartes.laboratory
 
 import android.content.Intent
 import android.os.Bundle
@@ -52,22 +52,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
-import com.penguin.laboratory.dex.DexActivity
-import com.penguin.laboratory.dex.DexStore
-import com.penguin.laboratory.edgelighting.EdgeLightingActivity
-import com.penguin.laboratory.glass.LiquidGlassActivity
-import com.penguin.laboratory.glass.LiquidGlassStore
-import com.penguin.laboratory.edgelighting.EdgeLightingStore
-import com.penguin.laboratory.experiments.ExperimentsActivity
-import com.penguin.laboratory.experiments.ExperimentsStore
-import com.penguin.laboratory.styles.StylesActivity
-import com.penguin.laboratory.styles.StylesStore
-import com.penguin.laboratory.ui.LabTheme
-import com.penguin.laboratory.ui.rememberMorphShape
-import com.penguin.laboratory.wonderland.WonderlandActivity
-import com.penguin.laboratory.wonderland.WonderlandStore
+import com.descartes.laboratory.cos.CosExperienceActivity
+import com.descartes.laboratory.cos.CosExperienceStore
+import com.descartes.laboratory.dex.DexActivity
+import com.descartes.laboratory.dex.DexStore
+import com.descartes.laboratory.edgelighting.EdgeLightingActivity
+import com.descartes.laboratory.edgelighting.EdgeLightingStore
+import com.descartes.laboratory.experiments.ExperimentsActivity
+import com.descartes.laboratory.experiments.ExperimentsStore
+import com.descartes.laboratory.glass.LiquidGlassActivity
+import com.descartes.laboratory.glass.LiquidGlassStore
+import com.descartes.laboratory.styles.StylesActivity
+import com.descartes.laboratory.styles.StylesStore
+import com.descartes.laboratory.ui.LabTheme
+import com.descartes.laboratory.ui.rememberMorphShape
+import com.descartes.laboratory.wonderland.WonderlandActivity
+import com.descartes.laboratory.wonderland.WonderlandStore
 
-/** Lists the experiments in Penguin Laboratory. */
+/** Lists the experiments in Descartes Laboratory. */
 class LaboratoryActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +87,7 @@ class LaboratoryActivity : ComponentActivity() {
         val wallpapers = remember(generation) { WonderlandStore.projects(this).size }
         val dexOn = remember(generation) { DexStore.isEnabled(this) }
         val glassOn = remember(generation) { LiquidGlassStore.isEnabled(this) }
+        val cosParts = remember(generation) { CosExperienceStore.onCount(this) }
         val stylesChanged = remember(generation) { StylesStore.customised(this) }
         val experimentsOn = remember(generation) { ExperimentsStore.enabledCount(this) }
 
@@ -190,6 +193,22 @@ class LaboratoryActivity : ComponentActivity() {
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     ) {
                         startActivity(Intent(this@LaboratoryActivity, LiquidGlassActivity::class.java))
+                    }
+                }
+                item {
+                    Experiment(
+                        title = stringResource(R.string.cos_title),
+                        summary = stringResource(R.string.cos_entry_summary),
+                        status =
+                            resources.getQuantityString(R.plurals.cos_status, cosParts, cosParts),
+                        active = cosParts > 0,
+                        icon = R.drawable.materialsymbols_ic_motion_photos_on_rounded_filled,
+                        restShape = MaterialShapes.Cookie6Sided,
+                        pressedShape = MaterialShapes.Oval,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    ) {
+                        startActivity(Intent(this@LaboratoryActivity, CosExperienceActivity::class.java))
                     }
                 }
                 item {
