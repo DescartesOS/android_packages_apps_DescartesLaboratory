@@ -5,7 +5,7 @@
 
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 
-package com.penguin.laboratory.cos
+package com.descartes.laboratory.cos
 
 import android.content.Context
 import android.os.Bundle
@@ -35,21 +35,28 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.penguin.laboratory.R
-import com.penguin.laboratory.ui.LabTheme
-import com.penguin.laboratory.ui.SectionHeader
-import com.penguin.laboratory.ui.SegmentedGroup
-import com.penguin.laboratory.ui.SwitchItem
+import com.descartes.laboratory.R
+import com.descartes.laboratory.ui.LabTheme
+import com.descartes.laboratory.ui.SectionHeader
+import com.descartes.laboratory.ui.SegmentedGroup
+import com.descartes.laboratory.ui.SwitchItem
 
 object CosExperienceStore {
     private const val ALL = "penguin_cos_experience"
 
-    enum class Part(val key: String, val title: Int, val summary: Int, val icon: Int) {
+    enum class Part(
+        val key: String,
+        val title: Int,
+        val summary: Int,
+        val icon: Int,
+        val defaultOn: Boolean = false,
+    ) {
         AppMotion(
             "penguin_cos_app_motion",
             R.string.cos_app_motion,
             R.string.cos_app_motion_summary,
             R.drawable.materialsymbols_ic_animation_rounded_filled,
+            defaultOn = true,
         ),
         Recents(
             "penguin_cos_recents",
@@ -101,10 +108,11 @@ object CosExperienceStore {
         ),
     }
 
-    private fun all(context: Context) = Settings.Secure.getInt(context.contentResolver, ALL, 0)
+    private fun all(context: Context, part: Part) =
+        Settings.Secure.getInt(context.contentResolver, ALL, if (part.defaultOn) 1 else 0)
 
     fun isOn(context: Context, part: Part) =
-        Settings.Secure.getInt(context.contentResolver, part.key, all(context)) == 1
+        Settings.Secure.getInt(context.contentResolver, part.key, all(context, part)) == 1
 
     fun setOn(context: Context, part: Part, on: Boolean) {
         Settings.Secure.putInt(context.contentResolver, part.key, if (on) 1 else 0)
