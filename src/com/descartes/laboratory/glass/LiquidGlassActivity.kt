@@ -5,7 +5,7 @@
 
 @file:OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 
-package com.penguin.laboratory.glass
+package com.descartes.laboratory.glass
 
 import android.content.Context
 import android.content.Intent
@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,12 +39,13 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.penguin.laboratory.R
-import com.penguin.laboratory.ui.ConnectedChoice
-import com.penguin.laboratory.ui.LabTheme
-import com.penguin.laboratory.ui.SectionHeader
-import com.penguin.laboratory.ui.SegmentedGroup
-import com.penguin.laboratory.ui.SwitchItem
+import com.descartes.laboratory.R
+import com.descartes.laboratory.ui.ConnectedChoice
+import com.descartes.laboratory.ui.LabTheme
+import com.descartes.laboratory.ui.PercentItem
+import com.descartes.laboratory.ui.SectionHeader
+import com.descartes.laboratory.ui.SegmentedGroup
+import com.descartes.laboratory.ui.SwitchItem
 
 /** Liquid Glass: the system's blurred surfaces drawn as glass that bends and catches light. */
 object LiquidGlassStore {
@@ -71,6 +73,17 @@ object LiquidGlassStore {
             if (style == Style.ColorOs) 1 else 0,
         )
     }
+
+    /** How strongly the iOS style's glass rims bend what lies beyond them, 0-100%. */
+    private const val REFRACTION_KEY = "penguin_liquid_glass_refraction"
+
+    fun refraction(context: Context) =
+        Settings.Secure.getInt(context.contentResolver, REFRACTION_KEY, 60).coerceIn(0, 100)
+
+    fun setRefraction(context: Context, percent: Int) {
+        Settings.Secure.putInt(context.contentResolver, REFRACTION_KEY, percent.coerceIn(0, 100))
+    }
+
 }
 
 class LiquidGlassActivity : ComponentActivity() {
@@ -86,6 +99,7 @@ class LiquidGlassActivity : ComponentActivity() {
         var enabled by remember { mutableStateOf(LiquidGlassStore.isEnabled(this)) }
         var tabBars by remember { mutableStateOf(TabBarStore.isEnabled(this)) }
         var style by remember { mutableStateOf(LiquidGlassStore.style(this)) }
+        var refraction by remember { mutableIntStateOf(LiquidGlassStore.refraction(this)) }
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -142,6 +156,7 @@ class LiquidGlassActivity : ComponentActivity() {
                             LiquidGlassStore.setStyle(this@LiquidGlassActivity, it)
                             style = it
                         },
+                        enabled = enabled,
                         label = {
                             stringResource(
                                 when (it) {
@@ -164,6 +179,36 @@ class LiquidGlassActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     )
+                }
+                // ColorOS's glass is frosted and does not refract.
+                if (style == LiquidGlassStore.Style.Ios) {
+                    item { SectionHeader(stringResource(R.string.liquid_glass_refraction_header)) }
+                    item {
+                        SegmentedGroup {
+                            PercentItem(
+                                title = stringResource(R.string.liquid_glass_refraction_header),
+                                value = refraction / 100f,
+                                onValueChange = {
+                                    val percent = Math.round(it * 100)
+                                    if (percent != refraction) {
+                                        LiquidGlassStore.setRefraction(this@LiquidGlassActivity, percent)
+                                        refraction = percent
+                                    }
+                                },
+                                index = 0,
+                                count = 1,
+                                enabled = enabled,
+                            )
+                        }
+                    }
+                    item {
+                        Text(
+                            stringResource(R.string.liquid_glass_refraction_summary),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        )
+                    }
                 }
                 item { SectionHeader(stringResource(R.string.tab_bars_header)) }
                 item {
