@@ -4,7 +4,7 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.penguin.laboratory">
+    package="com.descartes.laboratory">
 
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <!-- DeX's switches are secure settings the framework and SystemUI read -->
@@ -16,6 +16,8 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent>
+        <package android:name="com.crdroid.udfps.icons" />
+        <package android:name="com.crdroid.udfps.animations" />
     </queries>
 
     <application
@@ -53,6 +55,11 @@
             android:name=".styles.StylesActivity"
             android:exported="false"
             android:label="@string/styles_title"
+            android:theme="@style/Theme.Laboratory" />
+
+        <activity
+            android:name=".styles.UdfpsPickerActivity"
+            android:exported="false"
             android:theme="@style/Theme.Laboratory" />
 
         <activity
@@ -110,14 +117,14 @@
             android:name=".glass.TabBarSeenReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.penguin.laboratory.action.TAB_BAR_SEEN" />
+                <action android:name="com.descartes.laboratory.action.TAB_BAR_SEEN" />
             </intent-filter>
         </receiver>
 
         <!-- SystemUI reads the edge lighting style and images from here while dozing -->
         <provider
             android:name=".edgelighting.EdgeLightingProvider"
-            android:authorities="com.penguin.laboratory.provider"
+            android:authorities="com.descartes.laboratory.provider"
             android:directBootAware="true"
             android:exported="true"
             android:readPermission="android.permission.STATUS_BAR_SERVICE" />

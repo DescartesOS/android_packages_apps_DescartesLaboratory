@@ -4,7 +4,7 @@
      SPDX-License-Identifier: Apache-2.0
 -->
 <resources>
-    <string name="laboratory_title">Penguin Laboratory</string>
+    <string name="laboratory_title">Descartes Laboratory</string>
     <string name="laboratory_summary">Experiments for your lock screen and notifications</string>
     <string name="edge_lighting_entry_summary">Rain a photo\'s subject across the screen on notifications</string>
     <string name="edge_lighting_title">Edge lighting</string>
@@ -187,6 +187,7 @@
     <string name="styles_qs_myui">MyUI</string>
     <string name="styles_qs_harmony">HarmonyOS</string>
     <string name="styles_qs_coloros" translatable="false">ColorOS</string>
+    <string name="styles_qs_stock">Stock Android</string>
     <string name="styles_qs_oneui_active">Unavailable while One UI Quick Settings is on in Experiments</string>
     <string name="styles_qs_folder">Connectivity folder</string>
     <string name="styles_qs_folder_summary">Group Wi-Fi, mobile data and Bluetooth into one Quick Settings card</string>
@@ -197,6 +198,9 @@
     <string name="styles_power_title">Power menu</string>
     <string name="styles_power_penguin">Penguin</string>
     <string name="styles_power_ios">iOS</string>
+    <string name="styles_udfps_title">Fingerprint</string>
+    <string name="styles_udfps_icon">Fingerprint icon</string>
+    <string name="styles_udfps_animation">Fingerprint animation</string>
 
     <!-- Experiments -->
     <string name="experiments_title">Experiments</string>
